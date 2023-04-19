@@ -1,0 +1,54 @@
+{
+  "name": "@ohdat/common",
+  "version": "1.1.14",
+  "description": "ohdat common lib",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "testws": "ts-node script/test.ts",
+    "testchatgpt": "ts-node script/test_chatgpt.ts",
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ohdat/common.git"
+  },
+  "files": [
+    "lib/*",
+    "*.md"
+  ],
+  "keywords": [
+    "ohdat",
+    "common",
+    "lib",
+    "node",
+    "typescirpt",
+    "javascript"
+  ],
+  "author": "ohdat/xswl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ohdat/common/issues"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/ohdat"
+  },
+  "homepage": "https://github.com/ohdat/common#readme",
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/jest": "^28.1.6",
+    "@types/ws": "^8.5.3",
+    "ts-jest": "^28.0.7",
+    "typescript": "^4.7.4",
+    "ws": "^8.8.1"
+  },
+  "dependencies": {
+    "@ohdat/opb": "^1.0.18",
+    "@ohdat/pb": "^2.2.28",
+    "google-protobuf": "^3.21.2",
+    "reconnecting-websocket": "^4.4.0",
+    "ts-node": "^10.9.1",
+    "websocket-ts": "^1.1.1"
+  }
+}
