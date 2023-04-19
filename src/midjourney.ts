@@ -1,6 +1,7 @@
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import { ChatgptMesasge, ChatgptMesasgeWs } from "@ohdat/opb/chatgpt_pb";
-export class ChatgptSocket {
+import { MJCmd, MJSend, MJReply } from "@ohdat/opb/midjourney_pb";
+import {EnlargeType, VariationType} from "./enum";
+export class midjourneyWs {
   ws: ReconnectingWebSocket
   private event: Array<{ event: string; callback: (message: any) => void }> = []
   private lastPong = new Date().getTime()
@@ -42,12 +43,8 @@ export class ChatgptSocket {
         this._handlePong()
         return
       }
-      const msg = ChatgptMesasge.deserializeBinary(e.data);
-      if (msg.getParentMessageId() == '') {
-        this.emit('message-end', msg.getMessageId());
-      }else{
-        this.emit('message', msg);
-      }
+      const msg = MJReply.deserializeBinary(e.data);
+      this.emit('message', msg);
     })
   }
 
@@ -55,21 +52,34 @@ export class ChatgptSocket {
     this.lastPong = new Date().getTime()
   }
 
-  private send(message: any) {
-    this.ws.send(message)
-  }
-  public onMessage(callback: (message: ChatgptMesasge) => void) {
+  public onMessage(callback: (message: MJReply) => void) {
     this.on('message', callback)
   }
-  public onMessageEnd(callback: (messageId: string) => void) {
-    this.on('message-end', callback)
+  imagine(prompt: string) {
+    const msg = new MJSend();
+    msg.setCmd(MJCmd.IMAGINE);
+    msg.setPrompt(prompt);
+    this.ws.send(msg.serializeBinary());
   }
-
-  public reply(message:string,conversationId:string,parentMessageId:string){
-    const msg = new ChatgptMesasge();
-    msg.setMessage(message);
-    msg.setConversationId(conversationId);
-    msg.setParentMessageId(parentMessageId);
+  enlarge(messageId: string,option: EnlargeType) {
+    const msg = new MJSend();
+    msg.setCmd(MJCmd.ENLARGE);
+    msg.setMessageId(messageId);
+    msg.setOption(option);
+    this.ws.send(msg.serializeBinary());
+  }
+  variation(messageId: string,option: VariationType) {
+    const msg = new MJSend();
+    msg.setCmd(MJCmd.VARIATION);
+    msg.setMessageId(messageId);
+    msg.setOption(option);
+    this.ws.send(msg.serializeBinary());
+  }
+  imgLarge(prompt: string,option: EnlargeType) {
+    const msg = new MJSend();
+    msg.setCmd(MJCmd.IMGLARGE);
+    msg.setPrompt(prompt);
+    msg.setOption(option);
     this.ws.send(msg.serializeBinary());
   }
 }
